@@ -1,0 +1,20 @@
+{
+  "author": "Mark Bennett <mark.f.bennett@gmail.com> (http://markbennett.ca)",
+  "name": "future",
+  "description": "A JavaScript homage to the Dartlang Future.",
+  "version": "0.0.1",
+  "homepage": "http://github.com/MarkBennett/future-js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/MarkBennett/future-js.git"
+  },
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+      "jasmine-node": "~1.0.26"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
