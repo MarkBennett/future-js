@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+<title>Future.js</title>
+</head>
+<body>
+<h1>Future.js</h1>
+<p>A JavaScript implementation of the Dartlang Futures API.</p>
+<div id="target"></div>
+<script src="future.js"></script>
+
+<script type="text/javascript">
+(function() {
+    function MyFancyThing() {
+        var completer = new future.Completer();
+        
+        this.doSomethingAsync = function() {
+            document.querySelector("#target").innerHTML ="Starting async call";
+            
+            return completer.future();
+        };
+        
+        this.asyncDone = function() {
+            completer.complete("Success");
+        }
+    }
+    
+    var fancy = new MyFancyThing();
+    
+    fancy.doSomethingAsync().then(function(msg) {
+        document.querySelector("#target").innerHTML = "Async call complete";
+    }).then(function() {
+        console.log("Stuff is done");
+    });
+    
+    fancy.asyncDone();
+})();
+</script>
+</body>
+</html>
