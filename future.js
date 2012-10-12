@@ -16,7 +16,12 @@
     
     root.Completer = function() {
         var _future,
-            _completed = false,
+            STATE = {
+                INCOMPLETE : 1,
+                COMPLETED: 2,
+                COMPLETED_WITH_EXCEPTION: 3
+            },
+            _state = STATE.INCOMPLETE,
             _completed_args,
             completed_callbacks = [],
             exception_callbacks = [];
@@ -24,15 +29,24 @@
         // A private constructor for our future
         function Future() {
             this.then = function(callback) {
-                if (_completed) {
-                    callback.apply(this, _completed_args);
-                } else {
-                    completed_callbacks.push(callback);
+                switch (_state) {
+                    case STATE.INCOMPLETE:
+                        completed_callbacks.push(callback);
+                        break;
+                    case STATE.COMPLETED:
+                        callback.apply(this, _completed_args);
+                        break;
+                    case STATE.COMPLETED_WITH_EXCEPTION:
+                        break;
                 }
+                                
                 return this;
             };
+            
             this.handleException = function(callback) {
-                exception_callbacks.push(callback);
+                if (_state === STATE.INCOMPLETE) {
+                    exception_callbacks.push(callback);
+                }                
                 return this;
             };
         }
@@ -48,16 +62,21 @@
         this.complete = function() {
             var i;
             
-            if (!_completed) {    
-                _completed = true;
-                _completed_args = Array.prototype.slice.call(arguments, 0);
-                
-                for(i = 0; i < completed_callbacks.length; i++) {
-                    // Execute with this args in the context of the future
-                    completed_callbacks[i].apply(this.future(), _completed_args);
-                }
-            } else {
-                throw new Error("Already completed. Cannot complete again.");
+            switch (_state) {
+                case STATE.INCOMPLETE:
+                    _state = STATE.COMPLETED;
+                    _completed_args = Array.prototype.slice.call(arguments, 0);
+                    
+                    for(i = 0; i < completed_callbacks.length; i++) {
+                        // Execute with this args in the context of the future
+                        completed_callbacks[i].apply(this.future(), _completed_args);
+                    }
+                    
+                    break;
+                case STATE.COMPLETED:
+                    throw new Error("Already completed. Cannot complete again.");
+                case STATE.COMPLETED_WITH_EXCEPTION:
+                    throw new Error("Already completed with exception. Cannot complete again.");
             }
             
             return this;
@@ -66,13 +85,21 @@
         this.completeException = function() {
             var i;
             
-            if (!_completed) {    
-                for(i = 0; i < exception_callbacks.length; i++) {
-                    // Execute with this args in the context of the future
-                    exception_callbacks[i].apply(this.future(), arguments);
-                }
-            } else {
-                throw new Error("Already completed. Cannot complete with exception.");
+            
+            switch (_state) {
+                case STATE.INCOMPLETE:    
+                    _state = STATE.COMPLETED_WITH_EXCEPTION;
+                    
+                    for(i = 0; i < exception_callbacks.length; i++) {
+                        // Execute with this args in the context of the future
+                        exception_callbacks[i].apply(this.future(), arguments);
+                    }
+                    
+                    break;
+                case STATE.COMPLETED:
+                    throw new Error("Already completed. Cannot complete with exception.");
+                case STATE.COMPLETED_WITH_EXCEPTION:
+                    throw new Error("Already completed with exception. Cannot complete again.");
             }
             
             return this;

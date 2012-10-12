@@ -100,14 +100,21 @@ describe("Future-js", function() {
                 toThrow(new Error("Already completed. Cannot complete with exception."));
         });
         
-        it("should immediately call handlers with args once completed", function() {
+        it("should raise an exception when completing after completing with an exception", function() {
+            expect(function() { completer.completeException().complete(); }).
+                toThrow(new Error("Already completed with exception. Cannot complete again."));
+        });
+        
+        it("should never call handlers once completed with exception", function() {
             var handler = jasmine.createSpy("handler");
                 
-            completer.complete(1, "a", "b");
+            completer.completeException(new Error("Bad things"));
             
             future.then(handler);
             
-            expect(handler).toHaveBeenCalledWith(1, "a", "b");      
+            expect(handler).not.toHaveBeenCalled();
         });
+        
+        it("should immediately call exception handlers after completing with exception");
     });
 });
