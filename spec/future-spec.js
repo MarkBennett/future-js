@@ -47,5 +47,19 @@ describe("Future-js", function() {
             expect(handler_2).toHaveBeenCalled();
             expect(handler_3).toHaveBeenCalled();
         });
+        
+        it("should all each of the exception handlers if something's gone wrong", function() {
+            var future = completer.future(),
+                exception_handler1 = jasmine.createSpy('exception_handler1'),
+                exception_handler2 = jasmine.createSpy('exception_handler2');
+                
+                future.handleException(exception_handler1).
+                    handleException(exception_handler2);
+                    
+                completer.completeException();
+                
+                expect(exception_handler1).toHaveBeenCalled();
+                expect(exception_handler2).toHaveBeenCalled();
+        });
     });
 });

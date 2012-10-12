@@ -15,12 +15,17 @@
     
     root.Completer = function() {
         var _future,
-            completed_callbacks = [];
+            completed_callbacks = [],
+            exception_callbacks = [];
         
         // A private constructor for our future
         function Future() {
             this.then = function(callback) {
                 completed_callbacks.push(callback);
+                return this;
+            };
+            this.handleException = function(callback) {
+                exception_callbacks.push(callback);
                 return this;
             };
         }
@@ -38,6 +43,14 @@
             
             for(i = 0; i < completed_callbacks.length; i++) {
                 completed_callbacks[i].apply(this, arguments);
+            }
+        };
+        
+        this.completeException = function() {
+            var i;
+            
+            for(i = 0; i < exception_callbacks.length; i++) {
+                exception_callbacks[i].apply(this, arguments);
             }
         };
     };
