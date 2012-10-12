@@ -16,7 +16,7 @@
   "licenses": [
        {
            "type": "MIT",
-           "url": "http://github.com/MarkBennett/future-js"
+           "url": "https://raw.github.com/MarkBennett/future-js/master/LICENSE"
        }
    ],
   "dependencies": {},
