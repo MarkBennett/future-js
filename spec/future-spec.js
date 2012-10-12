@@ -90,5 +90,15 @@ describe("Future-js", function() {
             
             expect(handler.callCount).toEqual(1);
         });
+        
+        it("should immediately call handlers with args once completed", function() {
+            var handler = jasmine.createSpy("handler");
+                
+            completer.complete(1, "a", "b");
+            
+            future.then(handler);
+            
+            expect(handler).toHaveBeenCalledWith(1, "a", "b");      
+        });
     });
 });
