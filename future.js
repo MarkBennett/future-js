@@ -16,6 +16,7 @@
     
     root.Completer = function() {
         var _future,
+            _completed = false,
             completed_callbacks = [],
             exception_callbacks = [];
         
@@ -40,11 +41,17 @@
         
         // Complete this Completer, calling any associated callbacks
         this.complete = function() {
-            var i;
-            
-            for(i = 0; i < completed_callbacks.length; i++) {
-                completed_callbacks[i].apply(this, arguments);
+            if (!_completed) {
+                var i;
+                
+                _completed = true;
+                
+                for(i = 0; i < completed_callbacks.length; i++) {
+                    completed_callbacks[i].apply(this, arguments);
+                }
             }
+            
+            return this;
         };
         
         this.completeException = function() {
@@ -53,6 +60,8 @@
             for(i = 0; i < exception_callbacks.length; i++) {
                 exception_callbacks[i].apply(this, arguments);
             }
+            
+            return this;
         };
     };
 }.call(this));
