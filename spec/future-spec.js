@@ -81,14 +81,23 @@ describe("Future-js", function() {
             expect(handler_args).toEqual(completed_args);
         });
         
-        it("shouldn't allow you to complete more than once", function() {
+        it("should raise an exception when completing after already completed", function() {
+            expect(function() { completer.complete().complete(); }).toThrow(new Error("Already completed. Cannot complete again."));
+        });
+        
+        it("should immediately call handlers with args once completed", function() {
             var handler = jasmine.createSpy("handler");
+                
+            completer.complete(1, "a", "b");
             
             future.then(handler);
             
-            completer.complete().complete().complete();
-            
-            expect(handler.callCount).toEqual(1);
+            expect(handler).toHaveBeenCalledWith(1, "a", "b");      
+        });
+        
+        it("should raise an exception when completing with exception after completed", function() {
+            expect(function() { completer.complete().completeException(); }).
+                toThrow(new Error("Already completed. Cannot complete with exception."));
         });
         
         it("should immediately call handlers with args once completed", function() {

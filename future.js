@@ -46,9 +46,9 @@
         
         // Complete this Completer, calling any associated callbacks
         this.complete = function() {
-            if (!_completed) {
-                var i;
-                
+            var i;
+            
+            if (!_completed) {    
                 _completed = true;
                 _completed_args = Array.prototype.slice.call(arguments, 0);
                 
@@ -56,6 +56,8 @@
                     // Execute with this args in the context of the future
                     completed_callbacks[i].apply(this.future(), _completed_args);
                 }
+            } else {
+                throw new Error("Already completed. Cannot complete again.");
             }
             
             return this;
@@ -64,9 +66,13 @@
         this.completeException = function() {
             var i;
             
-            for(i = 0; i < exception_callbacks.length; i++) {
-                // Execute with this args in the context of the future
-                exception_callbacks[i].apply(this.future(), arguments);
+            if (!_completed) {    
+                for(i = 0; i < exception_callbacks.length; i++) {
+                    // Execute with this args in the context of the future
+                    exception_callbacks[i].apply(this.future(), arguments);
+                }
+            } else {
+                throw new Error("Already completed. Cannot complete with exception.");
             }
             
             return this;
