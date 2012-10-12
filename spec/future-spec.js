@@ -62,6 +62,22 @@ describe("Future-js", function() {
                 
                 expect(exception_handler1).toHaveBeenCalled();
                 expect(exception_handler2).toHaveBeenCalled();
+        });   
+        
+        it("should call any the Future's exception handlers with the arguments to completeException()", function() {
+            var future = completer.future(),
+                completed_args = [new Error("Bad")],
+                handler_args;
+                
+            // Register a handler on the future
+            future.handleException(function() {
+                handler_args = Array.prototype.slice.call(arguments, 0);
+            });
+            
+            // Complete the completer
+            completer.completeException.apply(completer, completed_args);
+            
+            expect(handler_args).toEqual(completed_args);
         });
     });
 });
