@@ -51,12 +51,13 @@ describe("Future-js", function() {
         it("should all each of the exception handlers if something's gone wrong", function() {
             var future = completer.future(),
                 exception_handler1 = jasmine.createSpy('exception_handler1'),
-                exception_handler2 = jasmine.createSpy('exception_handler2');
+                exception_handler2 = jasmine.createSpy('exception_handler2'),
+                error = new Error("Something bad");
                 
                 future.handleException(exception_handler1).
                     handleException(exception_handler2);
                     
-                completer.completeException();
+                completer.completeException(error);
                 
                 expect(exception_handler1).toHaveBeenCalled();
                 expect(exception_handler2).toHaveBeenCalled();
