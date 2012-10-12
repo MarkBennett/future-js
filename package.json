@@ -1,5 +1,9 @@
 {
-  "author": "Mark Bennett <mark.f.bennett@gmail.com> (http://markbennett.ca)",
+  "author": {
+      "name": "Mark Bennett",
+      "email": "mark.f.bennett@gmail.com",
+      "url": "http://markbennett.ca"
+   },
   "name": "future",
   "description": "A JavaScript homage to the Dartlang Future.",
   "version": "0.0.1",
@@ -9,6 +13,12 @@
     "url": "git://github.com/MarkBennett/future-js.git"
   },
   "main": "index.js",
+  "licenses": [
+       {
+           "type": "MIT",
+           "url": "http://github.com/MarkBennett/future-js"
+       }
+   ],
   "dependencies": {},
   "devDependencies": {
       "grunt": "~0.3.16",
