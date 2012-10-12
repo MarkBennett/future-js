@@ -1,3 +1,4 @@
+/*global jasmine:false describe:false it:false expect:false beforeEach:false require:false */
 var future = require('../');
 
 describe("Future-js", function() {

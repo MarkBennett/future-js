@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
     },
     lint: {
-      files: ['grunt.js', 'lib/**/*.js', 'spec/**/*.js']
+      files: ['grunt.js', 'lib/**/*.js', 'spec/**/*.js', 'future.js']
     },
     test: {
       files: ['spec/**/*.js']
